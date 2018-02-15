@@ -38,7 +38,7 @@ namespace App2
             buttonGetToken.Click += async (s, e) => {
                 var json = await FetchWeatherAsync("https://sosmarco.astutesolutions.org/Token");
                 Console.WriteLine("Token " + json["token"]);
-                this.ConnectToRoom("a", json["token"]);
+                //this.ConnectToRoom("a", json["token"]);
             };
 
         }
