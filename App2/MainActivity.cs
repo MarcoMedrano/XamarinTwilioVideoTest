@@ -2,7 +2,8 @@
 using Android.Widget;
 using Android.OS;
 using Com.Twilio.Video;
-
+using System.Collections.Generic;
+using System;
 
 namespace App2
 {
@@ -27,18 +28,72 @@ namespace App2
             button.Click += (s, e) => { button.Text = $"{++count} clicks!"; };
         }
 
-        //public void ConnectToRoom(string roomName)
-        //{
-        //    localAudioTrack = LocalAudioTrack.Create(this, true, LOCAL_AUDIO_TRACK_NAME);
+        public Room ConnectToRoom(string roomName)
+        {
+            var audioOptions = new AudioOptions.Builder().Build();
+            localAudioTrack = LocalAudioTrack.Create(this, true, audioOptions);
 
-        //    var accessToken = string.Empty;
-        //    ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
-        //      .RoomName(roomName)
-        //      .AudioTracks(localAudioTracks)
-        //      .VideoTracks(localVideoTracks)
-        //      .Build();
-        //    var room = Video.Connect(context, connectOptions, this);
-        //}
+            var accessToken = string.Empty;
+            ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
+              .RoomName(roomName)
+              .AudioTracks(new List<LocalAudioTrack>{ localAudioTrack })
+              //.VideoTracks(localVideoTracks)
+              .Build();
+
+            return Video.Connect(this, connectOptions, new RoomListener(this));
+        }
+
+        private class RoomListener : Java.Lang.Object, Room.IListener
+        {
+            private MainActivity mainActivity;
+
+            public RoomListener(MainActivity mainActivity)
+            {
+                this.mainActivity = mainActivity;
+            }
+
+            public IntPtr Handle => throw new NotImplementedException();
+
+            public void Dispose()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnConnected(Room p0)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnConnectFailure(Room p0, TwilioException p1)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnDisconnected(Room p0, TwilioException p1)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnParticipantConnected(Room p0, Participant p1)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnParticipantDisconnected(Room p0, Participant p1)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnRecordingStarted(Room p0)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnRecordingStopped(Room p0)
+            {
+                throw new NotImplementedException();
+            }
+        }
 
     }
 }
