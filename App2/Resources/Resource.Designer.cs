@@ -59,6 +59,9 @@ namespace App2
 			// aapt resource value: 0x7f040003
 			public const int button1 = 2130968579;
 			
+			// aapt resource value: 0x7f040004
+			public const int button2 = 2130968580;
+			
 			// aapt resource value: 0x7f040001
 			public const int fill = 2130968577;
 			
