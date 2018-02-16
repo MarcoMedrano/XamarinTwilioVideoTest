@@ -38,7 +38,7 @@ namespace App2
             buttonGetToken.Click += async (s, e) => {
                 var json = await FetchWeatherAsync("https://sosmarco.astutesolutions.org/Token");
                 Console.WriteLine("Token " + json["token"]);
-                //this.ConnectToRoom("a", json["token"]);
+                this.ConnectToRoom("a", json["token"]);
             };
 
         }
@@ -68,23 +68,33 @@ namespace App2
             }catch (Exception e)
             {
                 Console.WriteLine("Error requestiontoken " + e);
+                Toast.MakeText(this, e.Message, ToastLength.Long).Show();
                 return null;
             }
         }
 
         public Room ConnectToRoom(string roomName, string accessToken)
         {
-            var audioOptions = new AudioOptions.Builder().Build();
-            localAudioTrack = LocalAudioTrack.Create(this, true, audioOptions);
+            try
+            {
+                Console.WriteLine("Trying to connect to room " + roomName);
+                localAudioTrack = LocalAudioTrack.Create(this, true);
 
 
-            ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
-              .RoomName(roomName)
-              .AudioTracks(new List<LocalAudioTrack>{ localAudioTrack })
-              //.VideoTracks(localVideoTracks)
-              .Build();
+                ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
+                  .RoomName(roomName)
+                  .AudioTracks(new List<LocalAudioTrack> { localAudioTrack })
+                  //.VideoTracks(localVideoTracks)
+                  .Build();
 
-            return Video.Connect(this, connectOptions, new RoomListener(this));
+                return Video.Connect(this, connectOptions, new RoomListener(this));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: trying to connect to room " + e.Message );
+                Toast.MakeText(this, e.Message, ToastLength.Long).Show();
+                return null;
+            }
         }
 
         private class RoomListener : Java.Lang.Object, Room.IListener
