@@ -79,12 +79,15 @@ namespace App2
             {
                 Console.WriteLine("Trying to connect to room " + roomName);
                 localAudioTrack = LocalAudioTrack.Create(this, true);
+                CameraCapturer cameraCapturer = new CameraCapturer(this, CameraCapturer.CameraSource.FrontCamera);
 
+                // Create a video track
+                LocalVideoTrack localVideoTrack = LocalVideoTrack.Create(this, true, cameraCapturer);
 
                 ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
                   .RoomName(roomName)
                   .AudioTracks(new List<LocalAudioTrack> { localAudioTrack })
-                  //.VideoTracks(localVideoTracks)
+                  .VideoTracks(new List<LocalVideoTrack> { localVideoTrack })
                   .Build();
 
                 return Video.Connect(this, connectOptions, new RoomListener(this));
