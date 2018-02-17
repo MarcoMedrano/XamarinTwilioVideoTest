@@ -20,6 +20,12 @@ namespace App2
         private int count = 0;
         private LocalAudioTrack localAudioTrack;
         private LocalVideoTrack localVideoTrack;
+        private readonly RoomListener roomListener;
+
+        public MainActivity()
+        {
+            this.roomListener = new RoomListener(this);
+        }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -36,14 +42,14 @@ namespace App2
 
             var buttonGetToken = FindViewById<Button>(Resource.Id.button2);
             buttonGetToken.Click += async (s, e) => {
-                var json = await FetchWeatherAsync("https://sosmarco.astutesolutions.org/Token");
+                var json = await GetToken("https://sosmarco.astutesolutions.org/Token");
                 Console.WriteLine("Token " + json["token"]);
                 this.ConnectToRoom("a", json["token"]);
             };
 
         }
 
-        private async Task<JsonValue> FetchWeatherAsync(string url)
+        private async Task<JsonValue> GetToken(string url)
         {
             try
             {
@@ -51,17 +57,13 @@ namespace App2
                 request.ContentType = "application/json";
                 request.Method = "GET";
 
-                // Send the request to the server and wait for the response:
                 using (WebResponse response = await request.GetResponseAsync())
                 {
-                    // Get a stream representation of the HTTP web response:
                     using (Stream stream = response.GetResponseStream())
                     {
-                        // Use this stream to build a JSON document object:
                         JsonValue jsonDoc = await Task.Run(() => JsonObject.Load(stream));
                         Console.Out.WriteLine("Response: {0}", jsonDoc.ToString());
 
-                        // Return the JSON document:
                         return jsonDoc;
                     }
                 }
@@ -90,7 +92,7 @@ namespace App2
                   .VideoTracks(new List<LocalVideoTrack> { localVideoTrack })
                   .Build();
 
-                return Video.Connect(this, connectOptions, new RoomListener(this));
+                return Video.Connect(this, connectOptions, this.roomListener);
             }
             catch (Exception e)
             {
@@ -103,13 +105,15 @@ namespace App2
         private class RoomListener : Java.Lang.Object, Room.IListener
         {
             private MainActivity mainActivity;
+            public RoomListener()
+            {
+
+            }
 
             public RoomListener(MainActivity mainActivity)
             {
                 this.mainActivity = mainActivity;
             }
-
-            public IntPtr Handle => throw new NotImplementedException();
 
             public void Dispose()
             {
