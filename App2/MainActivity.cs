@@ -12,7 +12,7 @@ using System.Json;
 namespace App2
 {
     [Activity(Label = "App2", MainLauncher = true)]
-    public class MainActivity : Activity
+    public partial class MainActivity : Activity
     {
         private const string LOCAL_AUDIO_TRACK_NAME = "mic";
         private const string LOCAL_VIDEO_TRACK_NAME = "camera";
@@ -29,16 +29,11 @@ namespace App2
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Console.WriteLine("OnCreate");
             base.OnCreate(savedInstanceState);
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-            var button = FindViewById<Button>(Resource.Id.button1);
-            button.Text = RoomState.Connected.Name();
-            button.Click += (s, e) => {
-                button.Text = $"{++count} clicks!";
-                Console.WriteLine("CAT " + count);
-            };
 
             var buttonGetToken = FindViewById<Button>(Resource.Id.button2);
             buttonGetToken.Click += async (s, e) => {
@@ -101,61 +96,6 @@ namespace App2
                 return null;
             }
         }
-
-        private class RoomListener : Java.Lang.Object, Room.IListener
-        {
-            private MainActivity mainActivity;
-            public RoomListener()
-            {
-
-            }
-
-            public RoomListener(MainActivity mainActivity)
-            {
-                this.mainActivity = mainActivity;
-            }
-
-            public void Dispose()
-            {
-                Console.WriteLine("Dispose");
-            }
-
-            public void OnConnected(Room p0)
-            {
-                Console.WriteLine("OnConnected");
-            }
-
-            public void OnConnectFailure(Room p0, TwilioException p1)
-            {
-                Console.WriteLine("OnConnectFailure");
-            }
-
-            public void OnDisconnected(Room p0, TwilioException p1)
-            {
-                Console.WriteLine("OnDisconnected");
-            }
-
-            public void OnParticipantConnected(Room p0, Participant p1)
-            {
-                Console.WriteLine("OnParticipantConnected");
-            }
-
-            public void OnParticipantDisconnected(Room p0, Participant p1)
-            {
-                Console.WriteLine("OnParticipantDisconnected");
-            }
-
-            public void OnRecordingStarted(Room p0)
-            {
-                Console.WriteLine("OnRecordingStarted");
-            }
-
-            public void OnRecordingStopped(Room p0)
-            {
-                Console.WriteLine("OnRecordingStopped");
-            }
-        }
-
     }
 }
 
