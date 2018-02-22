@@ -22,6 +22,8 @@ namespace App2
         private LocalVideoTrack localVideoTrack;
         private readonly RoomListener roomListener;
 
+        private Com.Twilio.Video.VideoView primaryVideoView;
+
         public MainActivity()
         {
             this.roomListener = new RoomListener(this);
@@ -35,11 +37,14 @@ namespace App2
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
+            this.primaryVideoView = FindViewById<Com.Twilio.Video.VideoView>(Resource.Id.primary_video_view);
+            var editTextRoomName = FindViewById<EditText>(Resource.Id.editText1);
             var buttonGetToken = FindViewById<Button>(Resource.Id.button2);
+
             buttonGetToken.Click += async (s, e) => {
                 var json = await GetToken("https://sosmarco.astutesolutions.org/Token");
                 Console.WriteLine("Token " + json["token"]);
-                this.ConnectToRoom("a", json["token"]);
+                this.ConnectToRoom(editTextRoomName.Text.Trim(), json["token"]);
             };
 
         }
@@ -80,6 +85,9 @@ namespace App2
 
                 // Create a video track
                 LocalVideoTrack localVideoTrack = LocalVideoTrack.Create(this, true, cameraCapturer);
+
+                //primaryVideoView.SetMirror(true);
+                //localVideoTrack.AddRenderer(primaryVideoView);
 
                 ConnectOptions connectOptions = new ConnectOptions.Builder(accessToken)
                   .RoomName(roomName)

@@ -71,6 +71,9 @@ namespace App2
 			// aapt resource value: 0x7f040003
 			public const int linearLayout1 = 2130968579;
 			
+			// aapt resource value: 0x7f040007
+			public const int primary_video_view = 2130968583;
+			
 			// aapt resource value: 0x7f040004
 			public const int textView1 = 2130968580;
 			

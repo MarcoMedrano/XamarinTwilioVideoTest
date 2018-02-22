@@ -1,4 +1,5 @@
-﻿using Com.Twilio.Video;
+﻿using Android.Widget;
+using Com.Twilio.Video;
 using System;
 
 namespace App2
@@ -20,42 +21,47 @@ namespace App2
 
             public void Dispose()
             {
-                Console.WriteLine("Dispose");
+                Console.WriteLine("RoomListener.Dispose");
             }
 
-            public void OnConnected(Room p0)
+            public void OnConnected(Room room)
             {
-                Console.WriteLine("OnConnected");
+                Console.WriteLine("RoomListener.OnConnected");
+                //var participant = room.Participants[0];
             }
 
             public void OnConnectFailure(Room p0, TwilioException p1)
             {
-                Console.WriteLine("OnConnectFailure");
+                Console.WriteLine("RoomListener.OnConnectFailure");
             }
 
             public void OnDisconnected(Room p0, TwilioException p1)
             {
-                Console.WriteLine("OnDisconnected");
+                Console.WriteLine("RoomListener.OnDisconnected");
             }
 
-            public void OnParticipantConnected(Room p0, Participant p1)
+            public void OnParticipantConnected(Room room, Participant participant)
             {
-                Console.WriteLine("OnParticipantConnected");
+                Console.WriteLine("RoomListener.OnParticipantConnected");
+                var remoteParticipantIdentity = participant.Identity;
+                Toast.MakeText(this.mainActivity, "RemoteParticipant " + remoteParticipantIdentity + " joined", ToastLength.Short).Show();
+
+                participant.SetListener(new ParticipantListener(this.mainActivity));
             }
 
             public void OnParticipantDisconnected(Room p0, Participant p1)
             {
-                Console.WriteLine("OnParticipantDisconnected");
+                Console.WriteLine("RoomListener.OnParticipantDisconnected");
             }
 
             public void OnRecordingStarted(Room p0)
             {
-                Console.WriteLine("OnRecordingStarted");
+                Console.WriteLine("RoomListener.OnRecordingStarted");
             }
 
             public void OnRecordingStopped(Room p0)
             {
-                Console.WriteLine("OnRecordingStopped");
+                Console.WriteLine("RoomListener.OnRecordingStopped");
             }
         }
 
